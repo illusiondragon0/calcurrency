@@ -47,7 +47,7 @@
     color: var(--muted); margin-bottom: 2.5rem;
     display: flex; align-items: center; gap: 0.75rem;
   }
-h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; background: var(--border); }
+  h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; background: var(--border); }
 
   .sheet {
     background: var(--surface); border: 1px solid var(--border);
@@ -200,13 +200,13 @@ h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; b
 </head>
 <body>
 
-<h1></h1>
+<h1>CalCurrency</h1>
 
 <!-- ── Table 1 ── -->
 <div class="sheet">
   <div class="sheet-bar">
     <div class="dot dot-g"></div>
-    <span class="sheet-name">CalCurrency</span>
+    <span class="sheet-name">calcurrency</span>
   </div>
   <table>
     <tbody>
@@ -247,7 +247,7 @@ h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; b
 <div class="sheet">
   <div class="sheet-bar">
     <div class="dot dot-g"></div>
-    <span class="sheet-name">Bulk Calculator</span>
+    <span class="sheet-name">bulk calculator</span>
   </div>
   <table>
     <thead>
@@ -284,7 +284,7 @@ h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; b
 
   function compute(maxQty, priceStr) {
     const s = String(priceStr).trim();
-    const b = parseFloat(maxQty);
+    const b = Math.floor(parseFloat(maxQty)); // ปัดลงก่อน ไม่เกินจำนวนที่มี
     if (!s || s === '0' || isNaN(b) || b <= 0) return { price: 0, qty: 0 };
     if (numRe.test(s)) {
       const p = parseFloat(s);
@@ -295,7 +295,7 @@ h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; b
     if (fracRe.test(s)) {
       const m = s.match(fracRe), num = parseFloat(m[1]), den = parseFloat(m[2]);
       if (den === 0) return { error: 'หารด้วยศูนย์ไม่ได้' };
-      for (let q = b; q >= 0; q++) {
+      for (let q = b; q >= 0; q--) {
         const v = (q * num) / den;
         if (isWhole(v)) return { price: Math.round(v), qty: q };
       }
@@ -455,57 +455,46 @@ h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; b
     if (el && el.classList.contains('copyable')) doCopy(el);
   });
 
-  /* ── Firebase Realtime Database ── */
-  const FB_URL = 'https://calcurrency-a1d74-default-rtdb.asia-southeast1.firebasedatabase.app/data.json';
-  let saveTimer = null;
-
+  /* ── localStorage ── */
   function saveAll() {
-    clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      const data = {
-        b4: b4.value,
-        c4: c4.value,
-        rounds: roundsInput.value,
-        rows: []
-      };
-      for (let i = 0; i < ROWS; i++) {
-        data.rows.push({
-          name:  body.querySelector(`[data-row="${i}"][data-col="name"]`).value,
-          price: body.querySelector(`[data-row="${i}"][data-col="price"]`).value,
-          stock: body.querySelector(`[data-row="${i}"][data-col="stock"]`).value,
-          mult:  body.querySelector(`[data-row="${i}"][data-col="mult"]`).value,
-        });
-      }
-      fetch(FB_URL, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+    const data = {
+      b4: b4.value,
+      c4: c4.value,
+      rounds: roundsInput.value,
+      rows: []
+    };
+    for (let i = 0; i < ROWS; i++) {
+      data.rows.push({
+        name:  body.querySelector(`[data-row="${i}"][data-col="name"]`).value,
+        price: body.querySelector(`[data-row="${i}"][data-col="price"]`).value,
+        stock: body.querySelector(`[data-row="${i}"][data-col="stock"]`).value,
+        mult:  body.querySelector(`[data-row="${i}"][data-col="mult"]`).value,
       });
-    }, 800);
+    }
+    localStorage.setItem('calcurrency', JSON.stringify(data));
   }
 
   function loadAll() {
-    fetch(FB_URL)
-      .then(r => r.json())
-      .then(data => {
-        if (!data) { calcT1(); calcBulk(); return; }
-        if (data.b4     != null) b4.value = data.b4;
-        if (data.c4     != null) c4.value = data.c4;
-        if (data.rounds != null) roundsInput.value = data.rounds;
-        (data.rows || []).forEach((r, i) => {
-          if (i >= ROWS) return;
-          body.querySelector(`[data-row="${i}"][data-col="name"]`).value  = r.name  ?? '';
-          body.querySelector(`[data-row="${i}"][data-col="price"]`).value = r.price ?? '';
-          body.querySelector(`[data-row="${i}"][data-col="stock"]`).value = r.stock ?? '';
-          body.querySelector(`[data-row="${i}"][data-col="mult"]`).value  = r.mult  ?? '';
-        });
-        calcT1();
-        calcBulk();
-      })
-      .catch(() => { calcT1(); calcBulk(); });
+    try {
+      const data = JSON.parse(localStorage.getItem('calcurrency'));
+      if (!data) return;
+      if (data.b4     != null) b4.value = data.b4;
+      if (data.c4     != null) c4.value = data.c4;
+      if (data.rounds != null) roundsInput.value = data.rounds;
+      (data.rows || []).forEach((r, i) => {
+        if (i >= ROWS) return;
+        body.querySelector(`[data-row="${i}"][data-col="name"]`).value  = r.name  ?? '';
+        body.querySelector(`[data-row="${i}"][data-col="price"]`).value = r.price ?? '';
+        body.querySelector(`[data-row="${i}"][data-col="stock"]`).value = r.stock ?? '';
+        body.querySelector(`[data-row="${i}"][data-col="mult"]`).value  = r.mult  ?? '';
+      });
+    } catch(e) {}
   }
 
+  // Load saved data, then calculate
   loadAll();
+  calcT1();
+  calcBulk();
 </script>
 </body>
 </html>
