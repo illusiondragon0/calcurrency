@@ -7,55 +7,216 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3350;
-    --green: #4ade80; --green-dim: #166534; --green-glow: rgba(74, 222, 128, 0.15);
-    --red: #f87171; --text: #e2e8f0; --muted: #64748b; --accent: #38bdf8;
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --green: #4ade80;
+    --green-dim: #166534;
+    --green-glow: rgba(74, 222, 128, 0.15);
+    --red-glow: rgba(248, 113, 113, 0.13);
+    --red: #f87171;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #38bdf8;
     --cell-w: 120px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* Hide number input spinners */
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
-  body { background: var(--bg); color: var(--text); font-family: 'Sarabun', sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
-  h1 { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 0.75rem; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
   h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; background: var(--border); }
-  
-  .sheet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset; width: 100%; max-width: 900px; margin-bottom: 1.5rem; }
-  .sheet-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.5rem 1.2rem; display: flex; align-items: center; position: relative; min-height: 46px; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; background: #4ade80; z-index: 2; }
-  .sheet-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.12em; font-weight: 600; text-transform: uppercase; position: absolute; left: 50%; transform: translateX(-50%); pointer-events: none; width: 100%; text-align: center; }
-  
-  table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; width: 100%; }
-  td, th { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-width: var(--cell-w); height: 38px; padding: 0; position: relative; }
-  .label-cell { text-align: center; padding: 0.4rem 0.75rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.05em; white-space: nowrap; }
+
+  .sheet {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  }
+  .sheet-bar {
+    background: var(--surface2); border-bottom: 1px solid var(--border);
+    padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #f87171; } .dot-y { background: #fbbf24; } .dot-g { background: #4ade80; }
+  .sheet-name {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
+    color: var(--muted); margin-left: auto; margin-right: auto; letter-spacing: 0.1em;
+  }
+
+  table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; }
+  td, th {
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    min-width: var(--cell-w); height: 38px; padding: 0; position: relative;
+  }
+
+  .label-cell {
+    text-align: center; padding: 0.4rem 0.75rem; color: var(--muted);
+    font-size: 0.72rem; letter-spacing: 0.05em; white-space: nowrap;
+  }
+
+  /* Green inputs */
   .input-cell { background: var(--green-glow); }
-  .input-cell input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 600; text-align: center; padding: 0 0.5rem; }
-  
-  .name-cell input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Sarabun', sans-serif; font-size: 0.85rem; padding: 0 0.75rem; }
-  .output-cell { text-align: center; padding: 0 0.5rem; color: var(--accent); font-weight: 600; font-size: 0.88rem; height: 100%; display: flex; align-items: center; justify-content: center; }
-  .output-cell.zero { color: var(--muted); }
-  .output-cell.copyable, .sum-value { cursor: pointer; transition: color 0.2s; }
-  .output-cell.copyable:hover, .sum-value:hover { color: var(--green); }
-  
-  .bulk-header { background: var(--surface2); color: var(--muted); font-size: 0.7rem; text-align: center; padding: 0.35rem 0.5rem; }
-  .sum-row td { background: var(--surface2); border-bottom: none; }
-  .sum-label { color: var(--muted); font-size: 0.68rem; text-align: right; padding: 0 0.75rem; }
-  .sum-value { text-align: center; color: var(--green); font-weight: 700; font-size: 0.92rem; height: 100%; display: flex; align-items: center; justify-content: center; }
-  
-  .rounds-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
-  .rounds-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--muted); }
-  .rounds-input-wrap { background: var(--green-glow); border: 1px solid var(--border); border-radius: 6px; height: 32px; width: 80px; }
-  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; font-size: 0.9rem; }
-  
-  .version-footer { margin-top: 2rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--muted); opacity: 0.5; text-align: center; }
+  .input-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem; font-weight: 600; text-align: center; padding: 0 0.5rem; caret-color: var(--green);
+  }
+  .input-cell:focus-within { box-shadow: 0 0 0 2px var(--green) inset; background: rgba(74,222,128,0.12); }
+  .input-cell input::placeholder { color: var(--green-dim); }
+
+  /* Red inputs — now green like table 1 */
+  .red-cell { background: var(--green-glow); }
+  .red-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem; font-weight: 600; text-align: center; padding: 0 0.5rem; caret-color: var(--green);
+  }
+  .red-cell:focus-within { box-shadow: 0 0 0 2px var(--green) inset; background: rgba(74,222,128,0.12); }
+  .red-cell input::placeholder { color: var(--green-dim); }
+
+  /* Name cell */
+  .name-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--text); font-family: 'Sarabun', sans-serif;
+    font-size: 0.85rem; padding: 0 0.75rem; caret-color: var(--accent);
+  }
+  .name-cell:focus-within { box-shadow: 0 0 0 1px var(--accent) inset; }
+  .name-cell input::placeholder { color: var(--muted); }
+
+  /* Output cells */
+  .output-cell {
+    text-align: center; padding: 0 0.5rem; color: var(--accent);
+    font-weight: 600; font-size: 0.88rem; transition: color 0.2s;
+    height: 100%; display: flex; align-items: center; justify-content: center;
+  }
+  .output-cell.error { color: var(--red); font-size: 0.65rem; }
+  .output-cell.zero  { color: var(--muted); }
+  .output-cell.copyable { cursor: pointer; }
+  .output-cell.copyable:hover { color: var(--green); }
+  @keyframes copied-flash { 0%,100%{opacity:1} 40%{opacity:0.35} }
+  .output-cell.copied { color: var(--green) !important; animation: copied-flash 0.35s ease; }
+
+  /* Bulk header */
+  .bulk-header {
+    background: var(--surface2); color: var(--muted); font-size: 0.7rem;
+    letter-spacing: 0.04em; text-align: center; font-weight: 400;
+    white-space: nowrap; padding: 0.35rem 0.5rem;
+  }
+
+  /* Sum row */
+  .sum-row td { background: var(--surface2); }
+  .sum-label {
+    color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-align: right; padding: 0 0.75rem; white-space: nowrap;
+  }
+  .sum-value {
+    text-align: center; padding: 0 0.5rem;
+    color: var(--green); font-weight: 700; font-size: 0.92rem;
+    height: 100%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .sum-value:hover { color: var(--accent); }
+  .sum-value.copied { color: var(--accent) !important; animation: copied-flash 0.35s ease; }
+
+  /* จำนวนรอบ — single box above table 2 */
+  .rounds-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .rounds-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem; letter-spacing: 0.1em;
+    color: var(--muted); white-space: nowrap;
+  }
+  .rounds-input-wrap {
+    background: var(--green-glow);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    height: 36px; width: 90px;
+    display: flex; align-items: center; justify-content: center;
+    transition: box-shadow 0.15s;
+  }
+  .rounds-input-wrap:focus-within {
+    box-shadow: 0 0 0 2px var(--green);
+    background: rgba(74,222,128,0.12);
+  }
+  .rounds-input-wrap input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.95rem; font-weight: 700; text-align: center; caret-color: var(--green);
+  }
+  .rounds-input-wrap input::placeholder { color: var(--green-dim); }
+
+  /* Multiplier cell — green like other inputs */
+  .mult-cell { min-width: 60px !important; background: var(--green-glow); }
+  .mult-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem; font-weight: 600; text-align: center; padding: 0 0.3rem;
+    caret-color: var(--green);
+  }
+  .mult-cell:focus-within { box-shadow: 0 0 0 2px var(--green) inset; background: rgba(74,222,128,0.12); }
+  .mult-cell input::placeholder { color: var(--green-dim); }
+
+  /* Hint */
+  .hint {
+    margin-top: 1.25rem; font-size: 0.72rem; color: var(--muted);
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+  }
+  .hint span { display: flex; align-items: center; gap: 0.4rem; }
+  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .swatch-green { background: var(--green); }
+  .swatch-blue  { background: var(--accent); }
+  .swatch-red   { background: var(--red); }
+
+  @keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.1)} 100%{transform:scale(1)} }
+  .pop { animation: pop 0.22s ease; }
+  .spacer { height: 2.5rem; }
+
+  .version-footer {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--muted);
+    opacity: 0.45;
+    letter-spacing: 0.08em;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
 
 <h1>CalCurrency</h1>
 
+<!-- ── Table 1 ── -->
 <div class="sheet">
   <div class="sheet-bar">
-    <div class="dot"></div>
+    <div class="dot dot-g"></div>
     <span class="sheet-name">calcurrency</span>
   </div>
   <table>
@@ -63,12 +224,12 @@
       <tr>
         <td><div class="label-cell">จำนวน</div></td>
         <td><div class="label-cell">ราคา</div></td>
-        <td><div class="label-cell">ราคา (C)</div></td>
-        <td><div class="label-cell">จำนวนที่ได้</div></td>
+        <td><div class="label-cell">ราคา</div></td>
+        <td><div class="label-cell">จำนวน</div></td>
       </tr>
       <tr>
-        <td class="input-cell"><input id="b4" type="number" min="0" placeholder="0"></td>
-        <td class="input-cell"><input id="c4" type="text" placeholder="0"></td>
+        <td class="input-cell"><input id="b4" type="number" min="0" placeholder="0" value="0"></td>
+        <td class="input-cell"><input id="c4" type="text" placeholder="เช่น 2.5 หรือ 1/5" value="0"></td>
         <td><div class="output-cell zero" id="d4">—</div></td>
         <td><div class="output-cell zero" id="e4">—</div></td>
       </tr>
@@ -76,155 +237,303 @@
   </table>
 </div>
 
-<div class="rounds-bar" style="margin-top: 1rem;">
+<div class="hint">
+  <span><span class="swatch swatch-green"></span> ช่องกรอกข้อมูล</span>
+  <span><span class="swatch swatch-blue"></span> คลิกเพื่อ copy</span>
+  <span>ราคา: ทศนิยม (2.5) หรือ เศษส่วน (1/5)</span>
+</div>
+
+<div class="spacer"></div>
+
+<!-- ── Table 2 ── -->
+
+<!-- จำนวนรอบ: single shared input -->
+<div class="rounds-bar">
   <span class="rounds-label">จำนวนรอบ</span>
-  <div class="rounds-input-wrap"><input id="global-rounds" type="number" min="0" placeholder="0"></div>
+  <div class="rounds-input-wrap">
+    <input id="global-rounds" type="number" min="0" placeholder="0">
+  </div>
 </div>
 
 <div class="sheet">
   <div class="sheet-bar">
-    <div class="dot"></div>
+    <div class="dot dot-g"></div>
     <span class="sheet-name">bulk calculator</span>
   </div>
   <table>
     <thead>
       <tr>
-        <th class="bulk-header" style="text-align:left; padding-left:0.75rem;">ชื่อ</th>
+        <th class="bulk-header" style="min-width:285px; text-align:left; padding-left:0.75rem;">ชื่อ</th>
         <th class="bulk-header">ราคา/ชิ้น</th>
         <th class="bulk-header">มีอยู่แล้ว</th>
-        <th class="bulk-header">จำนวน/รอบ</th>
+        <th class="bulk-header" style="min-width:60px;">จำนวน/รอบ</th>
         <th class="bulk-header">จำนวน</th>
         <th class="bulk-header">C</th>
       </tr>
     </thead>
     <tbody id="bulk-body"></tbody>
-    <tfoot>
-      <tr class="sum-row"><td colspan="5" class="sum-label">รวม C ทั้งหมด</td><td><div class="sum-value" id="sum-c">—</div></td></tr>
-    </tfoot>
+      <tfoot>
+        <tr class="sum-row">
+          <td colspan="5" class="sum-label">รวม C ทั้งหมด</td>
+          <td><div class="sum-value" id="sum-c">—</div></td>
+        </tr>
+      </tfoot>
   </table>
 </div>
 
-<div class="version-footer">v1.2 (Organized) · {{COMMIT_DATE}}</div>
+<div class="hint" style="margin-bottom:2.5rem;">
+  <span><span class="swatch swatch-green"></span> ช่องกรอกข้อมูล</span>
+  <span><span class="swatch swatch-blue"></span> คลิกเพื่อ copy</span>
+  <span>จำนวน = (รอบ × จำนวน/รอบ) − มีอยู่แล้ว</span>
+</div>
 
 <script>
-  const numRe = /^\d+(\.\d+)?$/, fracRe = /^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/;
+  /* ── Shared helpers ── */
+  const numRe  = /^\d+(\.\d+)?$/;
+  const fracRe = /^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/;
   function isWhole(n) { return Math.abs(n - Math.round(n)) < 0.001; }
 
-  // ตารางบน: ปัดลง (Floor)
-  function computeFloor(maxQty, priceStr) {
-    const s = String(priceStr).trim(), b = Math.floor(parseFloat(maxQty));
+  function compute(maxQty, priceStr) {
+    const s = String(priceStr).trim();
+    const b = Math.floor(parseFloat(maxQty)); // ปัดลงก่อน ไม่เกินจำนวนที่มี
     if (!s || s === '0' || isNaN(b) || b <= 0) return { price: 0, qty: 0 };
     if (numRe.test(s)) {
       const p = parseFloat(s);
-      for (let q = b; q >= 0; q--) if (isWhole(q * p)) return { price: Math.round(q * p), qty: q };
+      for (let q = b; q >= 0; q--)
+        if (isWhole(q * p)) return { price: Math.round(q * p), qty: q };
+      return { price: 0, qty: 0 };
     }
     if (fracRe.test(s)) {
       const m = s.match(fracRe), num = parseFloat(m[1]), den = parseFloat(m[2]);
+      if (den === 0) return { error: 'หารด้วยศูนย์ไม่ได้' };
       for (let q = b; q >= 0; q--) {
         const v = (q * num) / den;
         if (isWhole(v)) return { price: Math.round(v), qty: q };
       }
+      return { price: 0, qty: 0 };
     }
-    return { price: 0, qty: 0 };
+    return { error: 'รูปแบบราคาไม่ถูกต้อง' };
   }
 
-  // ตารางล่าง: ปัดขึ้น (Up)
+  // เหมือน compute แต่ปัดขึ้น (loop จาก qty ขึ้นไปหาค่าลงตัว)
   function computeUp(minQty, priceStr) {
-    const s = String(priceStr).trim(), b = Math.ceil(parseFloat(minQty));
+    const s = String(priceStr).trim();
+    const b = Math.ceil(parseFloat(minQty));
     if (!s || s === '0' || isNaN(b) || b <= 0) return { price: 0, qty: 0 };
     if (numRe.test(s)) {
       const p = parseFloat(s);
-      for (let q = b; q <= b + 100000; q++) if (isWhole(q * p)) return { price: Math.round(q * p), qty: q };
+      for (let q = b; q <= b + 100000; q++)
+        if (isWhole(q * p)) return { price: Math.round(q * p), qty: q };
+      return { price: 0, qty: 0 };
     }
     if (fracRe.test(s)) {
       const m = s.match(fracRe), num = parseFloat(m[1]), den = parseFloat(m[2]);
+      if (den === 0) return { error: 'หารด้วยศูนย์ไม่ได้' };
       for (let q = b; q <= b + 100000; q++) {
         const v = (q * num) / den;
         if (isWhole(v)) return { price: Math.round(v), qty: q };
       }
+      return { price: 0, qty: 0 };
     }
-    return { price: 0, qty: 0 };
+    return { error: 'รูปแบบราคาไม่ถูกต้อง' };
   }
 
   function applyCell(el, val) {
+    const isErr  = typeof val === 'string';
     const isZero = val === 0;
-    el.dataset.raw = String(val);
-    el.textContent = isZero ? '—' : val.toLocaleString();
-    el.className = 'output-cell' + (isZero ? ' zero' : ' copyable');
+    el.dataset.raw = isErr ? '' : String(val);
+    el.textContent = isErr ? val : (isZero ? '—' : val.toLocaleString());
+    el.className   = 'output-cell' + (isErr ? ' error' : isZero ? ' zero' : ' copyable');
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   }
 
-  // Select All on Click/Focus
-  document.addEventListener('focusin', e => { if (e.target.tagName === 'INPUT') e.target.select(); });
-  document.addEventListener('click', e => { if (e.target.tagName === 'INPUT') e.target.select(); });
+  function doCopy(el) {
+    const raw = el.dataset.raw;
+    if (!raw) return;
+    navigator.clipboard.writeText(raw).then(() => {
+      const orig = el.textContent;
+      el.classList.add('copied'); el.textContent = 'copied!';
+      setTimeout(() => { el.classList.remove('copied'); el.textContent = orig; }, 900);
+    });
+  }
 
-  const b4 = document.getElementById('b4'), c4 = document.getElementById('c4'), d4 = document.getElementById('d4'), e4 = document.getElementById('e4');
-  const ROWS = 6, body = document.getElementById('bulk-body'), roundsInput = document.getElementById('global-rounds'), sumCEl = document.getElementById('sum-c');
+  /* ── Table 1 ── */
+  const b4 = document.getElementById('b4');
+  const c4 = document.getElementById('c4');
+  const d4 = document.getElementById('d4');
+  const e4 = document.getElementById('e4');
 
+  function calcT1() {
+    const r = compute(b4.value, c4.value);
+    if (r.error) { applyCell(d4, r.error); applyCell(e4, r.error); }
+    else         { applyCell(d4, r.price);  applyCell(e4, r.qty); }
+  }
+  b4.addEventListener('input', () => { saveAll(); calcT1(); });
+  c4.addEventListener('input', () => { saveAll(); calcT1(); });
+  d4.addEventListener('click', () => doCopy(d4));
+  e4.addEventListener('click', () => doCopy(e4));
+
+  /* Select all text on focus for all input cells */
+  document.addEventListener('focusin', e => {
+    if (e.target.tagName === 'INPUT') e.target.select();
+  });
+
+  /* ── Table 2 ── */
+  const ROWS        = 5;
+  const body        = document.getElementById('bulk-body');
+  const roundsInput = document.getElementById('global-rounds');
+
+  // Build rows
   for (let i = 0; i < ROWS; i++) {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td class="name-cell"><input type="text" data-row="${i}" data-col="name" placeholder="รายการ ${i+1}"></td><td class="input-cell"><input type="text" data-row="${i}" data-col="price" placeholder="0"></td><td class="input-cell"><input type="number" data-row="${i}" data-col="stock" placeholder="0"></td><td class="input-cell"><input type="number" step="any" data-row="${i}" data-col="mult" placeholder="1"></td><td><div class="output-cell zero" data-row="${i}" data-out="qty">—</div></td><td><div class="output-cell zero" data-row="${i}" data-out="total">—</div></td>`;
+    tr.innerHTML = `
+      <td class="name-cell" style="min-width:285px;">
+        <input type="text" placeholder="ชื่อ ${i+1}" data-row="${i}" data-col="name">
+      </td>
+      <td class="red-cell">
+        <input type="text" placeholder="0" data-row="${i}" data-col="price">
+      </td>
+      <td class="red-cell">
+        <input type="number" min="0" placeholder="0" data-row="${i}" data-col="stock">
+      </td>
+      <td class="mult-cell">
+        <input type="number" min="0" step="any" placeholder="1" data-row="${i}" data-col="mult">
+      </td>
+      <td><div class="output-cell zero" data-row="${i}" data-out="qty">—</div></td>
+      <td><div class="output-cell zero" data-row="${i}" data-out="total">—</div></td>
+    `;
     body.appendChild(tr);
   }
 
-  function calcAll() {
-    // Table 1: ปัดลง
-    const resT1 = computeFloor(b4.value, c4.value);
-    applyCell(d4, resT1.price); applyCell(e4, resT1.qty);
+  const sumCEl = document.getElementById('sum-c');
 
-    // Table 2: ปัดขึ้น
+  function calcBulk() {
     const rounds = parseFloat(roundsInput.value) || 0;
-    let totalC = 0;
+    let total = 0;
+
     for (let i = 0; i < ROWS; i++) {
-      const pStr = body.querySelector(`[data-row="${i}"][data-col="price"]`).value;
-      const stock = parseFloat(body.querySelector(`[data-row="${i}"][data-col="stock"]`).value) || 0;
-      const mult = parseFloat(body.querySelector(`[data-row="${i}"][data-col="mult"]`).value) || 1;
+      const stock   = parseFloat(body.querySelector(`[data-row="${i}"][data-col="stock"]`).value) || 0;
+      const multRaw = body.querySelector(`[data-row="${i}"][data-col="mult"]`).value.trim();
+      const mult    = multRaw === '' ? 1 : (parseFloat(multRaw) || 1);
+      const pStr    = body.querySelector(`[data-row="${i}"][data-col="price"]`).value;
+
+      const qtyEl   = body.querySelector(`[data-row="${i}"][data-out="qty"]`);
+      const totalEl = body.querySelector(`[data-row="${i}"][data-out="total"]`);
+
       const rawQty = Math.max(0, (rounds * mult) - stock);
-      const res = computeUp(rawQty, pStr);
-      applyCell(body.querySelector(`[data-row="${i}"][data-out="qty"]`), res.qty);
-      applyCell(body.querySelector(`[data-row="${i}"][data-out="total"]`), res.price);
-      totalC += res.price;
+      const noPrice = pStr.trim() === '';
+
+      if (noPrice) {
+        qtyEl.dataset.raw = '';
+        qtyEl.textContent = '-';
+        qtyEl.className = 'output-cell zero';
+        applyCell(totalEl, 0);
+      } else if (rawQty === 0) {
+        applyCell(qtyEl, 0);
+        applyCell(totalEl, 0);
+      } else {
+        const r = computeUp(rawQty, pStr);
+        if (r.error) {
+          applyCell(qtyEl, r.error);
+          applyCell(totalEl, r.error);
+        } else {
+          applyCell(qtyEl, r.qty);
+          applyCell(totalEl, r.price);
+          total += r.price;
+        }
+      }
     }
-    sumCEl.textContent = totalC === 0 ? '—' : totalC.toLocaleString();
+
+    sumCEl.dataset.raw = String(total);
+    sumCEl.textContent = total === 0 ? '—' : total.toLocaleString();
+    sumCEl.className = 'sum-value' + (total > 0 ? ' copyable' : '');
   }
 
+  sumCEl.addEventListener('click', () => {
+    const raw = sumCEl.dataset.raw;
+    if (!raw || raw === '0') return;
+    navigator.clipboard.writeText(raw).then(() => {
+      const orig = sumCEl.textContent;
+      sumCEl.classList.add('copied'); sumCEl.textContent = 'copied!';
+      setTimeout(() => { sumCEl.classList.remove('copied'); sumCEl.textContent = orig; }, 900);
+    });
+  });
+
+  roundsInput.addEventListener('input', () => { saveAll(); calcBulk(); });
+  body.addEventListener('input', () => { saveAll(); calcBulk(); });
+  body.addEventListener('click', e => {
+    const el = e.target.closest('[data-out]');
+    if (el && el.classList.contains('copyable')) doCopy(el);
+  });
+
+  /* ── Firebase Realtime Database ── */
+  const FB_URL = 'https://calcurrency-a1d74-default-rtdb.asia-southeast1.firebasedatabase.app/data.json';
+  let saveTimer = null;
+
   function saveAll() {
-    const data = { b4: b4.value, c4: c4.value, rounds: roundsInput.value, rows: [] };
-    for (let i = 0; i < ROWS; i++) {
-      data.rows.push({
-        name: body.querySelector(`[data-row="${i}"][data-col="name"]`).value,
-        price: body.querySelector(`[data-row="${i}"][data-col="price"]`).value,
-        stock: body.querySelector(`[data-row="${i}"][data-col="stock"]`).value,
-        mult: body.querySelector(`[data-row="${i}"][data-col="mult"]`).value
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      const data = {
+        b4: b4.value,
+        c4: c4.value,
+        rounds: roundsInput.value,
+        rows: []
+      };
+      for (let i = 0; i < ROWS; i++) {
+        data.rows.push({
+          name:  body.querySelector(`[data-row="${i}"][data-col="name"]`).value,
+          price: body.querySelector(`[data-row="${i}"][data-col="price"]`).value,
+          stock: body.querySelector(`[data-row="${i}"][data-col="stock"]`).value,
+          mult:  body.querySelector(`[data-row="${i}"][data-col="mult"]`).value,
+        });
+      }
+      fetch(FB_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
       });
-    }
-    localStorage.setItem('calcurrency', JSON.stringify(data));
+    }, 800);
   }
 
   function loadAll() {
-    const data = JSON.parse(localStorage.getItem('calcurrency'));
-    if (!data) return;
-    b4.value = data.b4 || ''; c4.value = data.c4 || ''; roundsInput.value = data.rounds || '';
-    (data.rows || []).forEach((r, i) => {
-      if (i < ROWS) {
-        body.querySelector(`[data-row="${i}"][data-col="name"]`).value = r.name || '';
-        body.querySelector(`[data-row="${i}"][data-col="price"]`).value = r.price || '';
-        body.querySelector(`[data-row="${i}"][data-col="stock"]`).value = r.stock || '';
-        body.querySelector(`[data-row="${i}"][data-col="mult"]`).value = r.mult || '';
-      }
-    });
-    calcAll();
+    fetch(FB_URL)
+      .then(r => r.json())
+      .then(data => {
+        if (!data) { calcT1(); calcBulk(); return; }
+        if (data.b4     != null) b4.value = data.b4;
+        if (data.c4     != null) c4.value = data.c4;
+        if (data.rounds != null) roundsInput.value = data.rounds;
+        (data.rows || []).forEach((r, i) => {
+          if (i >= ROWS) return;
+          body.querySelector(`[data-row="${i}"][data-col="name"]`).value  = r.name  ?? '';
+          body.querySelector(`[data-row="${i}"][data-col="price"]`).value = r.price ?? '';
+          body.querySelector(`[data-row="${i}"][data-col="stock"]`).value = r.stock ?? '';
+          body.querySelector(`[data-row="${i}"][data-col="mult"]`).value  = r.mult  ?? '';
+        });
+        calcT1();
+        calcBulk();
+      })
+      .catch(() => { calcT1(); calcBulk(); });
   }
 
-  document.addEventListener('input', () => { calcAll(); saveAll(); });
-  document.addEventListener('click', e => {
-    if (e.target.classList.contains('copyable')) {
-      navigator.clipboard.writeText(e.target.dataset.raw);
-      const old = e.target.textContent; e.target.textContent = 'copied!';
-      setTimeout(() => e.target.textContent = old, 800);
-    }
-  });
+  // ── Version: ดึงวันเวลา commit ล่าสุดจาก GitHub API ──
+  fetch('https://api.github.com/repos/illusiondragon0/calcurrency/commits/main')
+    .then(r => r.json())
+    .then(data => {
+      const iso = data?.commit?.committer?.date || data?.commit?.author?.date;
+      if (!iso) return;
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2, '0');
+      const str = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      const el = document.getElementById('version-footer');
+      if (el) el.textContent = `v1.1 · ${str}`;
+    })
+    .catch(() => {});
 
   loadAll();
 </script>
+
+<div class="version-footer" id="version-footer">v1.1 · กำลังโหลด...</div>
+
 </body>
 </html>
