@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CalCurrency - Organized Edition</title>
+<title>CalCurrency - Organized & Updated Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -18,6 +18,7 @@
     --text: #e2e8f0;
     --muted: #64748b;
     --accent: #38bdf8;
+    --red: #f87171;
     --cell-w: 125px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -38,10 +39,12 @@
     box-shadow: 0 0 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
     width: 100%; max-width: 900px; margin-bottom: 2rem;
   }
-  .sheet-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.6rem 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
+  .sheet-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.6rem 1.2rem; display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+  .sheet-bar-left { display: flex; align-items: center; gap: 0.6rem; flex-grow: 1; }
+  .sheet-bar-right { display: flex; align-items: center; gap: 0.6rem; }
   .dot { width: 11px; height: 11px; border-radius: 50%; }
   .dot-g { background: var(--green); }
-  .sheet-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #a1a1aa; margin-left: auto; margin-right: auto; letter-spacing: 0.12em; font-weight: 600; text-transform: none; }
+  .sheet-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #a1a1aa; letter-spacing: 0.12em; font-weight: 600; text-transform: none; text-align: center; flex-grow: 1; }
   table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; width: 100%; table-layout: fixed; }
   td, th { border-right: 1px solid var(--border-dim); border-bottom: 1px solid var(--border-dim); min-width: var(--cell-w); height: 42px; padding: 0; position: relative; }
   th:last-child, td:last-child { border-right: none; }
@@ -61,11 +64,14 @@
   .sum-row td { background: var(--surface2); border-bottom: none; }
   .sum-label { color: #a1a1aa; font-size: 0.75rem; text-align: right; padding: 0 1.2rem; font-family: 'Sarabun', sans-serif; font-weight: 600; }
   .sum-value { text-align: center; color: var(--green); font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; height: 100%; }
-  .rounds-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; width: 100%; max-width: 900px; justify-content: flex-start; }
-  .rounds-label { font-family: 'Sarabun', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
-  .rounds-input-wrap { background: var(--green-glow); border: 1px solid var(--border); border-radius: 8px; height: 38px; width: 100px; }
-  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; font-size: 1rem; font-family: 'IBM Plex Mono', monospace; }
-  .version-footer { margin-top: auto; padding-top: 3rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); opacity: 0.4; letter-spacing: 0.05em; }
+  
+  /* Adjusted Rounds Bar for Header */
+  .rounds-label { font-family: 'Sarabun', sans-serif; font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+  .rounds-input-wrap { background: rgba(0,0,0,0.2); border: 1px solid var(--border-dim); border-radius: 6px; height: 32px; width: 70px; }
+  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; font-size: 0.9rem; font-family: 'IBM Plex Mono', monospace; }
+  .rounds-input-wrap:focus-within { border-color: var(--green); box-shadow: 0 0 8px var(--green-glow); }
+
+  .version-footer { margin-top: auto; padding-top: 3rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); opacity: 0.4; letter-spacing: 0.05em; text-align: center; }
 </style>
 </head>
 <body>
@@ -73,7 +79,11 @@
 <h1>CalCurrency</h1>
 
 <div class="sheet">
-  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">CalCurrency</span></div>
+  <div class="sheet-bar">
+    <div class="sheet-bar-left"><div class="dot dot-g"></div></div>
+    <span class="sheet-name">CalCurrency</span>
+    <div class="sheet-bar-right"></div>
+  </div>
   <table>
     <colgroup>
       <col style="width: 25%;">
@@ -98,13 +108,15 @@
   </table>
 </div>
 
-<div class="rounds-bar" style="margin-top: 1.5rem;">
-  <span class="rounds-label">จำนวนรอบ</span>
-  <div class="rounds-input-wrap"><input id="global-rounds" type="number" min="0" placeholder="0"></div>
-</div>
-
-<div class="sheet">
-  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">Bulk Calculator</span></div>
+<div class="sheet" style="margin-top: 1.5rem;">
+  <div class="sheet-bar">
+    <div class="sheet-bar-left"><div class="dot dot-g"></div></div>
+    <span class="sheet-name">Bulk Calculator</span>
+    <div class="sheet-bar-right">
+      <span class="rounds-label">จำนวนรอบ</span>
+      <div class="rounds-input-wrap"><input id="global-rounds" type="number" min="0" placeholder="0"></div>
+    </div>
+  </div>
   <table>
     <colgroup>
       <col style="width: 35%;">
@@ -134,7 +146,7 @@
   </table>
 </div>
 
-<div class="version-footer">v1.2 (Organized) · 26/03/2026</div>
+<div class="version-footer" id="version-footer">v1.2 (Organized) · 26/03/2026</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -200,7 +212,7 @@
   /* Table UI */
   const b4 = document.getElementById('b4'), c4 = document.getElementById('c4'), d4 = document.getElementById('d4'), e4 = document.getElementById('e4');
   const body = document.getElementById('bulk-body'), roundsInput = document.getElementById('global-rounds'), sumCEl = document.getElementById('sum-c');
-  const ROWS = 6; // เพิ่มเป็น 6 แถวเพื่อความสมดุล
+  const ROWS = 6;
 
   for (let i = 0; i < ROWS; i++) {
     const tr = document.createElement('tr');
@@ -215,10 +227,8 @@
   }
 
   function calcAll() {
-    // T1
     const r1 = compute(b4.value, c4.value);
     applyCell(d4, r1.error || r1.price); applyCell(e4, r1.error || r1.qty);
-    // T2
     const rounds = parseFloat(roundsInput.value) || 0;
     let totalC = 0;
     for (let i = 0; i < ROWS; i++) {
@@ -240,7 +250,6 @@
     sumCEl.className = 'sum-value' + (totalC > 0 ? ' copyable' : '');
   }
 
-  // Sync with Firebase
   let isUpdating = false;
   function saveToFirebase() {
     if (isUpdating) return;
@@ -283,11 +292,14 @@
   
   document.addEventListener('click', e => {
     const el = e.target.closest('.copyable');
-    if (el && el.dataset.raw) {
-      navigator.clipboard.writeText(el.dataset.raw);
-      // Optional: Add feedback here (e.g., changed text or outline)
-    }
+    if (el && el.dataset.raw) navigator.clipboard.writeText(el.dataset.raw);
   });
+
+  // Time Footer Logic
+  const footerEl = document.getElementById('version-footer');
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit', hour12: false });
+  footerEl.textContent = `v1.2 (Organized) · 26/03/2026 ${timeStr}`;
 </script>
 </body>
 </html>
