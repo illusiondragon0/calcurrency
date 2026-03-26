@@ -3,23 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CalCurrency - Firebase Edition</title>
+<title>CalCurrency - Organized Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
+    --bg: #0c0e13;
+    --surface: #141722;
+    --surface2: #1c1f30;
+    --border: #2a2f4a;
+    --border-dim: #22263a;
     --green: #4ade80;
     --green-dim: #166534;
-    --green-glow: rgba(74, 222, 128, 0.15);
-    --red-glow: rgba(248, 113, 113, 0.13);
-    --red: #f87171;
+    --green-glow: rgba(74, 222, 128, 0.08);
     --text: #e2e8f0;
     --muted: #64748b;
     --accent: #38bdf8;
-    --cell-w: 120px;
+    --cell-w: 125px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   input[type=number]::-webkit-inner-spin-button,
@@ -27,47 +26,46 @@
   input[type=number] { -moz-appearance: textfield; }
   body {
     background: var(--bg); color: var(--text); font-family: 'Sarabun', sans-serif;
-    min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 2rem;
   }
   h1 {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 0.75rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 3rem; display: flex; align-items: center; gap: 1rem;
   }
-  h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; background: var(--border); }
+  h1::before, h1::after { content: ''; display: block; height: 1px; width: 50px; background: var(--border); }
   .sheet {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
-    box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    box-shadow: 0 0 70px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    width: 100%; max-width: 900px; margin-bottom: 2rem;
   }
-  .sheet-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.5rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .dot-r { background: #f87171; } .dot-y { background: #fbbf24; } .dot-g { background: #4ade80; }
-  .sheet-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-left: auto; margin-right: auto; letter-spacing: 0.1em; }
-  table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; }
-  td, th { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); min-width: var(--cell-w); height: 38px; padding: 0; position: relative; }
-  .label-cell { text-align: center; padding: 0.4rem 0.75rem; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.05em; white-space: nowrap; }
+  .sheet-bar { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 0.6rem 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-g { background: var(--green); }
+  .sheet-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #a1a1aa; margin-left: auto; margin-right: auto; letter-spacing: 0.12em; font-weight: 600; text-transform: none; }
+  table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; width: 100%; table-layout: fixed; }
+  td, th { border-right: 1px solid var(--border-dim); border-bottom: 1px solid var(--border-dim); min-width: var(--cell-w); height: 42px; padding: 0; position: relative; }
+  th:last-child, td:last-child { border-right: none; }
+  .label-cell { text-align: center; padding: 0.5rem 0.8rem; color: var(--muted); font-size: 0.75rem; letter-spacing: 0.06em; white-space: nowrap; font-family: 'Sarabun', sans-serif; }
   .input-cell { background: var(--green-glow); }
-  .input-cell input, .red-cell input {
+  .input-cell input, .name-cell input {
     width: 100%; height: 100%; background: transparent; border: none; outline: none;
-    color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 600; text-align: center; padding: 0 0.5rem;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; font-weight: 600; text-align: center; padding: 0 0.6rem;
   }
-  .name-cell input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--text); font-family: 'Sarabun', sans-serif; font-size: 0.85rem; padding: 0 0.75rem; }
-  .output-cell { text-align: center; padding: 0 0.5rem; color: var(--accent); font-weight: 600; font-size: 0.88rem; display: flex; align-items: center; justify-content: center; height: 100%; }
-  .output-cell.error { color: var(--red); font-size: 0.65rem; }
-  .output-cell.zero { color: var(--muted); }
-  .output-cell.copyable, .sum-value.copyable { cursor: pointer; }
-  .output-cell.copyable:hover, .sum-value:hover { color: var(--green); }
-  .bulk-header { background: var(--surface2); color: var(--muted); font-size: 0.7rem; text-align: center; padding: 0.35rem 0.5rem; }
-  .sum-row td { background: var(--surface2); }
-  .sum-label { color: var(--muted); font-size: 0.68rem; text-align: right; padding: 0 0.75rem; }
-  .sum-value { text-align: center; color: var(--green); font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; justify-content: center; height: 100%; }
-  .rounds-bar { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; }
-  .rounds-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--muted); }
-  .rounds-input-wrap { background: var(--green-glow); border: 1px solid var(--border); border-radius: 6px; height: 36px; width: 90px; }
-  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; }
-  .hint { margin-top: 1.25rem; font-size: 0.72rem; color: var(--muted); display: flex; gap: 1.5rem; justify-content: center; }
-  .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; }
-  .swatch-green { background: var(--green); } .swatch-blue { background: var(--accent); }
-  .version-footer { margin-top: 2rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--muted); opacity: 0.5; }
+  .name-cell input { color: var(--text); font-family: 'Sarabun', sans-serif; font-size: 0.88rem; font-weight: 400; text-align: left; padding: 0 1rem; }
+  .output-cell { text-align: center; padding: 0 0.6rem; color: var(--accent); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; height: 100%; }
+  .output-cell.error { color: var(--red); font-size: 0.68rem; }
+  .output-cell.zero { color: #4b5563; }
+  .output-cell.copyable, .sum-value.copyable { cursor: pointer; transition: color 0.15s; }
+  .output-cell.copyable:hover, .sum-value:hover { color: var(--green); text-shadow: 0 0 10px rgba(74, 222, 128, 0.4); }
+  .bulk-header { background: var(--surface2); color: var(--muted); font-size: 0.72rem; text-align: center; padding: 0.5rem 0.6rem; font-family: 'Sarabun', sans-serif; letter-spacing: 0.02em; }
+  .sum-row td { background: var(--surface2); border-bottom: none; }
+  .sum-label { color: #a1a1aa; font-size: 0.75rem; text-align: right; padding: 0 1.2rem; font-family: 'Sarabun', sans-serif; font-weight: 600; }
+  .sum-value { text-align: center; color: var(--green); font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; height: 100%; }
+  .rounds-bar { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.8rem; width: 100%; max-width: 900px; justify-content: flex-start; }
+  .rounds-label { font-family: 'Sarabun', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 600; }
+  .rounds-input-wrap { background: var(--green-glow); border: 1px solid var(--border); border-radius: 8px; height: 38px; width: 100px; }
+  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; font-size: 1rem; font-family: 'IBM Plex Mono', monospace; }
+  .version-footer { margin-top: auto; padding-top: 3rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); opacity: 0.4; letter-spacing: 0.05em; }
 </style>
 </head>
 <body>
@@ -75,14 +73,20 @@
 <h1>CalCurrency</h1>
 
 <div class="sheet">
-  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">calcurrency</span></div>
+  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">CalCurrency</span></div>
   <table>
+    <colgroup>
+      <col style="width: 25%;">
+      <col style="width: 25%;">
+      <col style="width: 25%;">
+      <col style="width: 25%;">
+    </colgroup>
     <tbody>
       <tr>
         <td><div class="label-cell">จำนวน</div></td>
         <td><div class="label-cell">ราคา</div></td>
-        <td><div class="label-cell">ราคา</div></td>
-        <td><div class="label-cell">จำนวน</div></td>
+        <td><div class="label-cell">ราคา (C)</div></td>
+        <td><div class="label-cell">จำนวนที่ได้</div></td>
       </tr>
       <tr>
         <td class="input-cell"><input id="b4" type="number" min="0" placeholder="0"></td>
@@ -94,35 +98,43 @@
   </table>
 </div>
 
-<div class="rounds-bar" style="margin-top: 2rem;">
+<div class="rounds-bar" style="margin-top: 1.5rem;">
   <span class="rounds-label">จำนวนรอบ</span>
   <div class="rounds-input-wrap"><input id="global-rounds" type="number" min="0" placeholder="0"></div>
 </div>
 
 <div class="sheet">
-  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">bulk calculator</span></div>
+  <div class="sheet-bar"><div class="dot dot-g"></div><span class="sheet-name">Bulk Calculator</span></div>
   <table>
+    <colgroup>
+      <col style="width: 35%;">
+      <col style="width: 15%;">
+      <col style="width: 15%;">
+      <col style="width: 10%;">
+      <col style="width: 15%;">
+      <col style="width: 10%;">
+    </colgroup>
     <thead>
       <tr>
-        <th class="bulk-header" style="min-width:285px; text-align:left; padding-left:0.75rem;">ชื่อ</th>
+        <th class="bulk-header" style="text-align:left; padding-left:1rem;">ชื่อ</th>
         <th class="bulk-header">ราคา/ชิ้น</th>
         <th class="bulk-header">มีอยู่แล้ว</th>
-        <th class="bulk-header" style="min-width:60px;">จำนวน/รอบ</th>
-        <th class="bulk-header">จำนวน</th>
-        <th class="bulk-header">C</th>
+        <th class="bulk-header">จำนวน/รอบ</th>
+        <th class="bulk-header">จำนวนที่ต้องใช้</th>
+        <th class="bulk-header">ราคา (C)</th>
       </tr>
     </thead>
     <tbody id="bulk-body"></tbody>
     <tfoot>
       <tr class="sum-row">
-        <td colspan="5" class="sum-label">รวม C ทั้งหมด</td>
+        <td colspan="5" class="sum-label">รวมราคา (C) ทั้งหมด</td>
         <td><div class="sum-value" id="sum-c">—</div></td>
       </tr>
     </tfoot>
   </table>
 </div>
 
-<div class="version-footer">v1.1 (Firebase) · 26/03/2026</div>
+<div class="version-footer">v1.2 (Organized) · 26/03/2026</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -188,15 +200,15 @@
   /* Table UI */
   const b4 = document.getElementById('b4'), c4 = document.getElementById('c4'), d4 = document.getElementById('d4'), e4 = document.getElementById('e4');
   const body = document.getElementById('bulk-body'), roundsInput = document.getElementById('global-rounds'), sumCEl = document.getElementById('sum-c');
-  const ROWS = 5;
+  const ROWS = 6; // เพิ่มเป็น 6 แถวเพื่อความสมดุล
 
   for (let i = 0; i < ROWS; i++) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td class="name-cell"><input type="text" data-row="${i}" data-col="name"></td>
-      <td class="input-cell"><input type="text" data-row="${i}" data-col="price"></td>
-      <td class="input-cell"><input type="number" data-row="${i}" data-col="stock"></td>
-      <td class="input-cell"><input type="number" step="any" data-row="${i}" data-col="mult"></td>
+      <td class="name-cell"><input type="text" data-row="${i}" data-col="name" placeholder="รายการ ${i+1}"></td>
+      <td class="input-cell"><input type="text" data-row="${i}" data-col="price" placeholder="0"></td>
+      <td class="input-cell"><input type="number" data-row="${i}" data-col="stock" placeholder="0"></td>
+      <td class="input-cell"><input type="number" step="any" data-row="${i}" data-col="mult" placeholder="1"></td>
       <td><div class="output-cell zero" data-row="${i}" data-out="qty">—</div></td>
       <td><div class="output-cell zero" data-row="${i}" data-out="total">—</div></td>`;
     body.appendChild(tr);
@@ -212,7 +224,8 @@
     for (let i = 0; i < ROWS; i++) {
       const pStr = body.querySelector(`[data-row="${i}"][data-col="price"]`).value;
       const stock = parseFloat(body.querySelector(`[data-row="${i}"][data-col="stock"]`).value) || 0;
-      const mult = parseFloat(body.querySelector(`[data-row="${i}"][data-col="mult"]`).value) || 1;
+      const multRaw = body.querySelector(`[data-row="${i}"][data-col="mult"]`).value;
+      const mult = parseFloat(multRaw) || (multRaw === '0' ? 0 : 1);
       const qtyEl = body.querySelector(`[data-row="${i}"][data-out="qty"]`), totalEl = body.querySelector(`[data-row="${i}"][data-out="total"]`);
       const rawQty = Math.max(0, (rounds * mult) - stock);
       if (!pStr.trim()) { applyCell(qtyEl, 0); applyCell(totalEl, 0); }
@@ -261,10 +274,19 @@
     isUpdating = false;
   });
 
-  document.addEventListener('input', saveToFirebase);
+  document.addEventListener('input', (e) => {
+    if (e.target.tagName === 'INPUT') {
+      calcAll();
+      saveToFirebase();
+    }
+  });
+  
   document.addEventListener('click', e => {
     const el = e.target.closest('.copyable');
-    if (el && el.dataset.raw) navigator.clipboard.writeText(el.dataset.raw);
+    if (el && el.dataset.raw) {
+      navigator.clipboard.writeText(el.dataset.raw);
+      // Optional: Add feedback here (e.g., changed text or outline)
+    }
   });
 </script>
 </body>
