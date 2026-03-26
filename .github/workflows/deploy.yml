@@ -1,20 +1,27 @@
 name: Deploy to Firebase Hosting
 
-on: push: branches: - main
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Inject Commit Date
         run: |
-          # ดึงเวลา Commit ล่าสุดในรูปแบบ 26/03/2026 11:12
-          COMMIT_DATE=$(git log -1 --format="%ad" --date=format:"%d/%m/%Y %H:%M")
-          # แทนที่คำสั่งใน HTML
-          sed -i "s//$COMMIT_DATE/g" index.html
+          # ดึงเวลา Commit ล่าสุด (GMT+7)
+          COMMIT_DATE=$(git log -1 --format="%ad" --date=format-local:"%d/%m/%Y %H:%M")
+          echo "Last Commit: $COMMIT_DATE"
+          # แทนที่ตัวแปรใน index.html
+          sed -i "s/{{COMMIT_DATE}}/$COMMIT_DATE/g" index.html
 
       - name: Install Firebase CLI
         run: npm install -g firebase-tools
