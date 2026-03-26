@@ -7,37 +7,135 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a; --border: #2e3350;
-    --green: #4ade80; --green-dim: #166534; --green-glow: rgba(74, 222, 128, 0.15);
-    --red: #f87171; --text: #e2e8f0; --muted: #64748b; --accent: #38bdf8;
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3350;
+    --green: #4ade80;
+    --green-dim: #166534;
+    --green-glow: rgba(74, 222, 128, 0.15);
+    --red-glow: rgba(248, 113, 113, 0.13);
+    --red: #f87171;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #38bdf8;
+    --cell-w: 120px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Sarabun', sans-serif; display: flex; flex-direction: column; align-items: center; padding: 2rem; }
-  
-  /* จัดการ Header ให้ชื่ออยู่ตรงกลางเป๊ะ */
+
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sarabun', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  h1::before, h1::after { content: ''; display: block; height: 1px; width: 40px; background: var(--border); }
+
+  .sheet {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    width: 100%; max-width: 900px; margin-bottom: 1.5rem;
+  }
+
+  /* Fixed Centered Header */
   .sheet-bar {
     background: var(--surface2); border-bottom: 1px solid var(--border);
-    padding: 0.5rem 1rem; display: flex; align-items: center; position: relative; min-height: 42px;
+    padding: 0.5rem 1.2rem; display: flex; align-items: center; 
+    position: relative; min-height: 46px;
   }
   .dot { width: 10px; height: 10px; border-radius: 50%; background: #4ade80; z-index: 2; }
   .sheet-name {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--muted);
-    position: absolute; left: 0; right: 0; text-align: center; pointer-events: none;
-    letter-spacing: 0.12em; font-weight: 600; text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    color: var(--muted); letter-spacing: 0.12em; font-weight: 600; text-transform: uppercase;
+    position: absolute; left: 50%; transform: translateX(-50%); 
+    pointer-events: none; width: 100%; text-align: center;
   }
-  .sheet-bar-right { margin-left: auto; z-index: 2; display: flex; align-items: center; gap: 0.75rem; }
+  .sheet-bar-right {
+    margin-left: auto; z-index: 2;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
 
-  /* Style อื่นๆ คงไว้ตามต้นฉบับของคุณ */
-  .sheet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; width: 100%; max-width: 900px; margin-bottom: 1.5rem; }
   table { border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; width: 100%; }
-  td, th { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); height: 38px; text-align: center; }
+  td, th {
+    border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    min-width: var(--cell-w); height: 38px; padding: 0; position: relative;
+  }
+
+  .label-cell {
+    text-align: center; padding: 0.4rem 0.75rem; color: var(--muted);
+    font-size: 0.72rem; letter-spacing: 0.05em; white-space: nowrap;
+  }
+
   .input-cell { background: var(--green-glow); }
-  .input-cell input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 600; }
-  .output-cell { color: var(--accent); font-weight: 600; }
-  .rounds-label { font-size: 0.68rem; color: var(--muted); }
-  .rounds-input-wrap { background: var(--green-glow); border: 1px solid var(--border); border-radius: 6px; width: 70px; height: 30px; }
-  .rounds-input-wrap input { width: 100%; height: 100%; background: transparent; border: none; outline: none; color: var(--green); text-align: center; font-weight: 700; }
-  .version-footer { margin-top: 2rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--muted); opacity: 0.5; }
+  .input-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.88rem; font-weight: 600; text-align: center; padding: 0 0.5rem;
+  }
+
+  .name-cell input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--text); font-family: 'Sarabun', sans-serif;
+    font-size: 0.85rem; padding: 0 0.75rem;
+  }
+
+  .output-cell {
+    text-align: center; padding: 0 0.5rem; color: var(--accent);
+    font-weight: 600; font-size: 0.88rem;
+    height: 100%; display: flex; align-items: center; justify-content: center;
+  }
+  .output-cell.zero  { color: var(--muted); }
+  .output-cell.copyable { cursor: pointer; transition: color 0.2s; }
+  .output-cell.copyable:hover { color: var(--green); }
+  .output-cell.copied { color: var(--green) !important; animation: copied-flash 0.35s ease; }
+
+  @keyframes copied-flash { 0%,100%{opacity:1} 40%{opacity:0.35} }
+
+  .bulk-header {
+    background: var(--surface2); color: var(--muted); font-size: 0.7rem;
+    text-align: center; padding: 0.35rem 0.5rem;
+  }
+
+  .sum-row td { background: var(--surface2); border-bottom: none; }
+  .sum-label { color: var(--muted); font-size: 0.68rem; text-align: right; padding: 0 0.75rem; }
+  .sum-value {
+    text-align: center; color: var(--green); font-weight: 700; font-size: 0.92rem;
+    height: 100%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+
+  .rounds-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+  .rounds-input-wrap {
+    background: var(--green-glow); border: 1px solid var(--border); border-radius: 6px;
+    height: 32px; width: 80px;
+  }
+  .rounds-input-wrap input {
+    width: 100%; height: 100%; background: transparent; border: none; outline: none;
+    color: var(--green); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem; font-weight: 700; text-align: center;
+  }
+
+  .version-footer {
+    margin-top: 2rem; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; color: var(--muted); opacity: 0.5; text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -47,42 +145,170 @@
 <div class="sheet">
   <div class="sheet-bar">
     <div class="dot"></div>
-    <span class="sheet-name">CalCurrency</span>
+    <span class="sheet-name">calcurrency</span>
   </div>
   <table>
-    <tr>
-      <td><div style="font-size:0.7rem; color:var(--muted)">จำนวน</div></td>
-      <td><div style="font-size:0.7rem; color:var(--muted)">ราคา</div></td>
-      <td><div style="font-size:0.7rem; color:var(--muted)">ราคา (C)</div></td>
-      <td><div style="font-size:0.7rem; color:var(--muted)">จำนวนที่ได้</div></td>
-    </tr>
-    <tr>
-      <td class="input-cell"><input id="b4" type="number" placeholder="0"></td>
-      <td class="input-cell"><input id="c4" type="text" placeholder="0"></td>
-      <td><div class="output-cell" id="d4">—</div></td>
-      <td><div class="output-cell" id="e4">—</div></td>
-    </tr>
+    <tbody>
+      <tr>
+        <td><div class="label-cell">จำนวน</div></td>
+        <td><div class="label-cell">ราคา</div></td>
+        <td><div class="label-cell">ราคา (C)</div></td>
+        <td><div class="label-cell">จำนวนที่ได้</div></td>
+      </tr>
+      <tr>
+        <td class="input-cell"><input id="b4" type="number" min="0" placeholder="0"></td>
+        <td class="input-cell"><input id="c4" type="text" placeholder="0"></td>
+        <td><div class="output-cell zero" id="d4">—</div></td>
+        <td><div class="output-cell zero" id="e4">—</div></td>
+      </tr>
+    </tbody>
   </table>
 </div>
+
+<div style="height: 20px;"></div>
 
 <div class="sheet">
   <div class="sheet-bar">
     <div class="dot"></div>
-    <span class="sheet-name">Bulk Calculator</span>
+    <span class="sheet-name">bulk calculator</span>
     <div class="sheet-bar-right">
       <span class="rounds-label">จำนวนรอบ</span>
-      <div class="rounds-input-wrap"><input id="global-rounds" type="number" placeholder="0"></div>
+      <div class="rounds-input-wrap"><input id="global-rounds" type="number" min="0" placeholder="0"></div>
     </div>
   </div>
-  <table id="bulk-table">
-    </table>
+  <table>
+    <thead>
+      <tr>
+        <th class="bulk-header" style="text-align:left; padding-left:0.75rem;">ชื่อ</th>
+        <th class="bulk-header">ราคา/ชิ้น</th>
+        <th class="bulk-header">มีอยู่แล้ว</th>
+        <th class="bulk-header">จำนวน/รอบ</th>
+        <th class="bulk-header">จำนวน</th>
+        <th class="bulk-header">C</th>
+      </tr>
+    </thead>
+    <tbody id="bulk-body"></tbody>
+    <tfoot>
+      <tr class="sum-row">
+        <td colspan="5" class="sum-label">รวม C ทั้งหมด</td>
+        <td><div class="sum-value" id="sum-c">—</div></td>
+      </tr>
+    </tfoot>
+  </table>
 </div>
 
 <div class="version-footer">v1.2 (Organized) · {{COMMIT_DATE}}</div>
 
 <script>
-  // ใส่ Logic การคำนวณและ localStorage เดิมของคุณที่นี่
-  // อย่าลืมว่าตัวแปร {{COMMIT_DATE}} จะถูกแทนที่โดย GitHub Actions เมื่อมีการ Deploy ครับ
+  /* ── Logic ── */
+  const numRe  = /^\d+(\.\d+)?$/;
+  const fracRe = /^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/;
+  function isWhole(n) { return Math.abs(n - Math.round(n)) < 0.001; }
+
+  function computeUp(minQty, priceStr) {
+    const s = String(priceStr).trim();
+    const b = Math.ceil(parseFloat(minQty));
+    if (!s || s === '0' || isNaN(b) || b <= 0) return { price: 0, qty: 0 };
+    if (numRe.test(s)) {
+      const p = parseFloat(s);
+      for (let q = b; q <= b + 100000; q++)
+        if (isWhole(q * p)) return { price: Math.round(q * p), qty: q };
+    }
+    if (fracRe.test(s)) {
+      const m = s.match(fracRe), num = parseFloat(m[1]), den = parseFloat(m[2]);
+      for (let q = b; q <= b + 100000; q++) {
+        const v = (q * num) / den;
+        if (isWhole(v)) return { price: Math.round(v), qty: q };
+      }
+    }
+    return { price: 0, qty: 0 };
+  }
+
+  function applyCell(el, val) {
+    const isZero = val === 0;
+    el.dataset.raw = String(val);
+    el.textContent = isZero ? '—' : val.toLocaleString();
+    el.className = 'output-cell' + (isZero ? ' zero' : ' copyable');
+  }
+
+  /* ── Table UI ── */
+  const ROWS = 6;
+  const body = document.getElementById('bulk-body');
+  const roundsInput = document.getElementById('global-rounds');
+  const sumCEl = document.getElementById('sum-c');
+
+  for (let i = 0; i < ROWS; i++) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="name-cell"><input type="text" data-row="${i}" data-col="name" placeholder="รายการ ${i+1}"></td>
+      <td class="input-cell"><input type="text" data-row="${i}" data-col="price" placeholder="0"></td>
+      <td class="input-cell"><input type="number" data-row="${i}" data-col="stock" placeholder="0"></td>
+      <td class="input-cell"><input type="number" step="any" data-row="${i}" data-col="mult" placeholder="1"></td>
+      <td><div class="output-cell zero" data-row="${i}" data-out="qty">—</div></td>
+      <td><div class="output-cell zero" data-row="${i}" data-out="total">—</div></td>`;
+    body.appendChild(tr);
+  }
+
+  function calcAll() {
+    const rounds = parseFloat(roundsInput.value) || 0;
+    let totalC = 0;
+    for (let i = 0; i < ROWS; i++) {
+      const pStr = body.querySelector(`[data-row="${i}"][data-col="price"]`).value;
+      const stock = parseFloat(body.querySelector(`[data-row="${i}"][data-col="stock"]`).value) || 0;
+      const mult = parseFloat(body.querySelector(`[data-row="${i}"][data-col="mult"]`).value) || 1;
+      const qtyEl = body.querySelector(`[data-row="${i}"][data-out="qty"]`);
+      const totalEl = body.querySelector(`[data-row="${i}"][data-out="total"]`);
+
+      const rawQty = Math.max(0, (rounds * mult) - stock);
+      if (!pStr.trim()) { applyCell(qtyEl, 0); applyCell(totalEl, 0); }
+      else {
+        const res = computeUp(rawQty, pStr);
+        applyCell(qtyEl, res.qty); applyCell(totalEl, res.price);
+        totalC += res.price;
+      }
+    }
+    sumCEl.textContent = totalC === 0 ? '—' : totalC.toLocaleString();
+  }
+
+  document.addEventListener('input', () => { calcAll(); saveAll(); });
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('copyable')) {
+      navigator.clipboard.writeText(e.target.dataset.raw);
+      const old = e.target.textContent;
+      e.target.textContent = 'copied!';
+      setTimeout(() => e.target.textContent = old, 800);
+    }
+  });
+
+  function saveAll() {
+    const data = { rounds: roundsInput.value, rows: [] };
+    for (let i = 0; i < ROWS; i++) {
+      data.rows.push({
+        name: body.querySelector(`[data-row="${i}"][data-col="name"]`).value,
+        price: body.querySelector(`[data-row="${i}"][data-col="price"]`).value,
+        stock: body.querySelector(`[data-row="${i}"][data-col="stock"]`).value,
+        mult: body.querySelector(`[data-row="${i}"][data-col="mult"]`).value
+      });
+    }
+    localStorage.setItem('calcurrency_v1.2', JSON.stringify(data));
+  }
+
+  function loadAll() {
+    const data = JSON.parse(localStorage.getItem('calcurrency_v1.2'));
+    if (!data) return;
+    roundsInput.value = data.rounds || '';
+    data.rows.forEach((r, i) => {
+      if (i < ROWS) {
+        body.querySelector(`[data-row="${i}"][data-col="name"]`).value = r.name || '';
+        body.querySelector(`[data-row="${i}"][data-col="price"]`).value = r.price || '';
+        body.querySelector(`[data-row="${i}"][data-col="stock"]`).value = r.stock || '';
+        body.querySelector(`[data-row="${i}"][data-col="mult"]`).value = r.mult || '';
+      }
+    });
+    calcAll();
+  }
+
+  loadAll();
 </script>
 </body>
 </html>
