@@ -291,7 +291,7 @@
   /* ── Shared helpers ── */
   const numRe  = /^\d+(\.\d+)?$/;
   const fracRe = /^(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/;
-  function isWhole(n) { return Math.abs(n - Math.round(n)) < 0.001; }
+  function isWhole(n) { return Math.abs(n - Math.round(n)) < 1e-6; }
 
   function compute(maxQty, priceStr) {
     const s = String(priceStr).trim();
